@@ -15,12 +15,8 @@ router.get('/post', function(req, res, next) {
   res.render('post', { title: 'Express' });
 });
 
-router.get('/dashboard/info', function(req, res, next) {
-  res.render('dashboard/info', { title: 'Express' });
-});
-
-router.get('/dashboard/signup', function(req, res, next) {
-  res.render('dashboard/signup', { title: 'Express' });
-});
+// router.get('/dashboard/info', function(req, res, next) {
+//   res.render('dashboard/info', { title: 'Express' });
+// });
 
 module.exports = router;
