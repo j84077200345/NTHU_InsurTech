@@ -1,11 +1,24 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
-</html>
+<% extend('./layouts/layout') %>
+
+<div class="row my-4 justify-content-center">
+  <div class="col-md-9">
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          <a href="/post.html"> <h2 class="text-primary">Motor Crash Insurance</h2></a>
+          <div class="d-flex flex-row text-secondary small">
+            <div class="p-2"><span class="fa fa-clock-o"></span> 2019/10/01</div>
+            <div class="p-2"><i class="fa fa-tag" aria-hidden="true"></i> 
+              <a href="#" class="text-info">
+                產物保險
+              </a>
+            </div>
+          </div>
+          <div>
+            本保險產品致力於事故的即時理賠，利用以太坊智能合約實現自動理賠機制。另外，透過影像處理技術自動判斷用戶上傳的事故影片。
+          </div>
+        </div>
+      </div>
+    
+  </div>
+</div>
