@@ -3,27 +3,45 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
 var flash = require('connect-flash');
 
-var index = require('./routes/index');
-var auth = require('./routes/auth');
+var indexRouter = require('./routes/index');
+var dashboardRouter = require('./routes/dashboard');
+var authRouter = require('./routes/auth');
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.engine('ejs', require('express-ejs-extend'));
 app.set('view engine', 'ejs');
+app.engine('ejs', require('express-ejs-extend'));
 
 app.use(logger('dev'));
-app.use(flash());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: 'rehome',
+  resave: true,
+  saveUninitialized: true,
+  cookie: {maxAge: 100*1000}
+}))
+app.use(flash());
 
-app.use('/', index);
-app.use('/auth', auth);
+const authCheck = function(req, res, next) {
+  console.log('middleware', req.session);
+  if(req.session.uid) {
+    return next();
+  }
+
+  return res.redirect('/auth/signin');
+}
+
+app.use('/', indexRouter);
+app.use('/dashboard', authCheck, dashboardRouter);
+app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
