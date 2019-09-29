@@ -26,7 +26,7 @@ app.use(session({
   secret: 'rehome',
   resave: true,
   saveUninitialized: true,
-  cookie: {maxAge: 100*1000}
+  cookie: {maxAge: 100*10000}
 }))
 app.use(flash());
 

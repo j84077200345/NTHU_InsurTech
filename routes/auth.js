@@ -1,5 +1,6 @@
 const express = require('express');
 const firebaseClient = require('../connections/firebase_client');
+const firebaseAdminDB = require('../connections/firebase_admin');
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.get('/signup', function(req, res) {
 });
   
 router.post('/signup', function(req, res) {
+    const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
     const confirmPassword = req.body.confirm_password;
@@ -25,6 +27,12 @@ router.post('/signup', function(req, res) {
     firebaseClient.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
       req.session.uid = user.user.uid;
       console.log('uid: ', req.session.uid);
+      var saveUser = {
+          'name': name,
+          'email': email,
+          'uid': user.user.uid
+      }
+      firebaseAdminDB.ref('/users/' + user.user.uid).set(saveUser);
       res.redirect('/auth/signin');
     }).catch(function(error) {
       console.log(error);
