@@ -1,0 +1,37 @@
+<% extend('../layouts/dashboard-layout') %>
+
+<%
+        if(tx === undefined) {
+                var tx = null;
+        }
+%>
+
+<div class="row justify-content-center">
+
+        
+        <div style="width: 80%;" class="card mb-3 text-center">
+                <div class="card-body">
+                    <h3 class="card-title">Underwrite our Motor Insurance</h3>
+                    <form action="/dashboard/underwrite" method="POST">
+                        <div class="form-group col-md-12">
+                                <label for="inputState">Your Address</label>
+                                <select id="selectAddress" name="selectAddress" class="form-control">
+                                  <% for(var prop in addressList) { %>
+                                    <option value="<%= addressList[prop][0] %>"><%= addressList[prop][0] %></option>
+                                  <% } %>
+                                </select>
+                        </div>
+                        <button id="underwriteBtn" type="submit" class="btn btn-danger">Submit</button>
+                    </form>
+                </div>
+        </div>
+        <% if(tx != null) { %>
+                <div style="width: 80%;" class="card text-white text-center bg-info mb-3" style="max-width: 18rem;">
+                        <div class="card-header">Transaction Hash</div>
+                        <div class="card-body">
+                                <p class="card-text"><%= tx %></p>
+                                <a class="btn btn-outline-light" role="button" target="_blank" href="https://rinkeby.etherscan.io/tx/<%= tx %>">Check on Etherscan</a>
+                        </div>
+                </div>
+        <% } %>
+</div>

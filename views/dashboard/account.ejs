@@ -84,7 +84,7 @@
     <div>
         <ul id="addressList" class="list-group">
             <% for(var prop in addressList) { %>
-                <li style="list-style-position: inside; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="list-group-item"><a href="https://ropsten.etherscan.io/address/<%= addressList[prop] %>" target="_blank"><%= addressList[prop] %></a></li>
+                <li style="list-style-position: inside; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="list-group-item"><a href="https://rinkeby.etherscan.io/address/<%= addressList[prop][0] %>" target="_blank"><%= addressList[prop][0] %></a></li>
             <% } %>
         </ul>
     </div>
