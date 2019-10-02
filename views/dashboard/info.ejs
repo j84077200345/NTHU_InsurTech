@@ -1,8 +1,20 @@
 <% extend('../layouts/dashboard-layout') %>
 
 <div style="text-align: center">
-   <h2>Welcome <%= name %></h2> 
+   <h2><i class="fas fa-user"></i> <%= name %></h2>
 </div>
+<center>
+  <form action="/dashboard" method="POST" style="place-content: center;" class="form-inline">
+      <div class="form-group mx-sm-3 mb-2">
+          <select id="List" name="list" class="form-control">
+              <% for(var prop in addressList) { %>
+                <option><%= addressList[prop][0] %></option>
+              <% } %>
+          </select>
+      </div>
+      <button id="searchAddress" type="submit" class="btn btn-outline-success mb-2">Search</button>
+  </form>
+</center>
 
 <div class="row">
         <div class="col-xl-3 col-md-6 mb-4">
@@ -11,7 +23,7 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Balance</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                        <div id="balance" class="h5 mb-0 font-weight-bold text-gray-800"><%= firstAddressMsg.balance %> ETH</div>
                       </div>
                       <div class="col-auto">
                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -26,7 +38,7 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Transactions</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">200</div>
+                        <div id="txs" class="h5 mb-0 font-weight-bold text-gray-800"><%= firstAddressMsg.txs_count %> RECORDS</div>
                       </div>
                       <div class="col-auto">
                         <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -41,10 +53,10 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">From</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">20</div>
+                        <div id="from" class="h5 mb-0 font-weight-bold text-gray-800"><%= firstAddressMsg.from %> RECORDS</div>
                       </div>
                       <div class="col-auto">
-                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        <i class="fas fa-portrait fa-2x text-gray-300"></i>
                       </div>
                     </div>
                   </div>
@@ -56,13 +68,25 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">To</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">1</div>
+                        <div id="to" class="h5 mb-0 font-weight-bold text-gray-800"><%= firstAddressMsg.to %> RECORDS</div>
                       </div>
                       <div class="col-auto">
-                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        <i class="fas fa-users-cog fa-2x text-gray-300"></i>
                       </div>
                     </div>
                   </div>
                 </div>
         </div>
 </div>
+<center>
+  <ul class="list-group justify-content-center">
+      <h3>Insured Status</h3>
+      <li  class="list-group-item list-group-item-danger"><%= insuranceStatus.banned %></li>
+      <li class="list-group-item list-group-item-warning"><%= insuranceStatus.policyValid %></li>
+      <li class="list-group-item list-group-item-info"><%= insuranceStatus.lastPayment %></li>
+      <li class="list-group-item list-group-item-light"><%= insuranceStatus.numAccidents %></li>
+      <li class="list-group-item list-group-item-dark"><%= insuranceStatus.totalPayment %></li>
+  </ul>
+</center>
+<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
+<script src="/javascripts/info.js"></script>

@@ -1,15 +1,98 @@
 var express = require('express');
 var router = express.Router();
 
+const Web3 = require('web3');
+const web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/v3/772c5bb74c54405aa9a0718484d64b92"));
+
 const firebaseAdminDB = require('../connections/firebase_admin');
 const insurance_address = '0xa7B4960Ee77D64defbD2b0155ce828E4A8Bb6E75';
+
+var insuranceContract = web3.eth.contract([ { "constant": false, "inputs": [ { "name": "severity", "type": "uint256" } ], "name": "confirmclaim", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "insuranceTaker", "type": "address" } ], "name": "payPremium", "outputs": [], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": false, "inputs": [ { "name": "insuranceTaker", "type": "address" } ], "name": "payPremiumFor", "outputs": [], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": false, "inputs": [], "name": "underwrite", "outputs": [], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": false, "inputs": [ { "name": "insuranceTaker", "type": "address" } ], "name": "update", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "payable": true, "stateMutability": "payable", "type": "constructor" }, { "constant": true, "inputs": [], "name": "balanceOf", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "contract_owner", "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "insuranceTakers", "outputs": [ { "name": "banned", "type": "bool" }, { "name": "policyValid", "type": "bool" }, { "name": "lastPayment", "type": "uint256" }, { "name": "numAccidents", "type": "uint256" }, { "name": "totalPayment", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "insuranceTaker", "type": "address" } ], "name": "isInsured", "outputs": [ { "name": "insured", "type": "bool" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "paymentPeriod", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "premiumPerYear", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" } ]);
+insuranceInstance = insuranceContract.at(insurance_address);
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   var uid = req.session.uid;
   firebaseAdminDB.ref('/users/' + uid).once('value', function(snapshot) {
     var name = snapshot.val().name;
-    res.render('dashboard/info', { name });
+    var addressList = snapshot.val().address;
+    if(addressList == undefined) {
+      addressList = {'message': 'You don\'t have any ethereum address yet !!'}
+    }
+
+    // get First Address
+    // console.log(addressList[Object.keys(addressList)[0]][0]);
+    
+    fetch('https://api.cryptoapis.io/v1/bc/eth/rinkeby/address/' + addressList[Object.keys(addressList)[0]][0], {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': 'a418a13cf522402db6214a2c8a76413bc93f2f17'
+      }
+    }).then(function(response) {
+      response.json().then(function(data) {
+        var firstAddressMsg = data.payload;
+        
+        insuranceInstance.insuranceTakers.call(addressList[Object.keys(addressList)[0]][0], function(err, result) {
+          var insuranceStatus = {
+            banned: result[0],
+            policyValid: result[1],
+            lastPayment: result[2].toFixed(1),
+            numAccidents: result[3].toFixed(1),
+            totalPayment: result[4].toFixed(1)
+          }
+          
+          res.render('dashboard/info', {
+            name,
+            addressList,
+            firstAddressMsg,
+            insuranceStatus
+          });
+        });
+      });
+    });
+
+  });
+});
+
+router.post('/', function(req, res) {
+  var search = req.body.list;
+  var uid = req.session.uid;
+
+  firebaseAdminDB.ref('/users/' + uid).once('value', function(snapshot) {
+    var name = snapshot.val().name;
+    var addressList = snapshot.val().address;
+    if(addressList == undefined) {
+      addressList = {'message': 'You don\'t have any ethereum address yet !!'}
+    }
+
+    fetch('https://api.cryptoapis.io/v1/bc/eth/rinkeby/address/' + search, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': 'a418a13cf522402db6214a2c8a76413bc93f2f17'
+      }
+    }).then(function(response) {
+      response.json().then(function(data) {
+        var firstAddressMsg = data.payload;
+        
+        insuranceInstance.insuranceTakers.call(search, function(err, result) {
+          var insuranceStatus = {
+            banned: result[0],
+            policyValid: result[1],
+            lastPayment: result[2],
+            numAccidents: result[3].toFixed(1),
+            totalPayment: result[4].toFixed(0) / 1000000000000000000
+          }
+          
+          res.render('dashboard/info', {
+            name,
+            addressList,
+            firstAddressMsg,
+            insuranceStatus
+          });
+        });
+      });
+    });
+
   });
 });
 
