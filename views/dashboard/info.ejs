@@ -81,11 +81,11 @@
 <center>
   <ul class="list-group justify-content-center">
       <h3>Insured Status</h3>
-      <li  class="list-group-item list-group-item-danger"><%= insuranceStatus.banned %></li>
-      <li class="list-group-item list-group-item-warning"><%= insuranceStatus.policyValid %></li>
-      <li class="list-group-item list-group-item-info"><%= insuranceStatus.lastPayment %></li>
-      <li class="list-group-item list-group-item-light"><%= insuranceStatus.numAccidents %></li>
-      <li class="list-group-item list-group-item-dark"><%= insuranceStatus.totalPayment %></li>
+      <li  class="list-group-item list-group-item-danger">Banned : <%= insuranceStatus.banned %></li>
+      <li class="list-group-item list-group-item-warning">Policy Valid : <%= insuranceStatus.policyValid %></li>
+      <li class="list-group-item list-group-item-info">Last Payment Time : <%= insuranceStatus.lastPayment %></li>
+      <li class="list-group-item list-group-item-light">Number og Accidents : <%= insuranceStatus.numAccidents %></li>
+      <li class="list-group-item list-group-item-dark">Total Payment : <%= insuranceStatus.totalPayment %></li>
   </ul>
 </center>
 <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>

@@ -33,12 +33,23 @@ router.get('/', function(req, res, next) {
         var firstAddressMsg = data.payload;
         
         insuranceInstance.insuranceTakers.call(addressList[Object.keys(addressList)[0]][0], function(err, result) {
+          var dt = new Date(Number(result[2])*1000);
+          var year = dt.getFullYear();
+          var month = dt.getMonth() + 1;
+          var date = dt.getDate();
+          var datetime;
+          if(year < 2019) {
+            datetime = 'null';
+          } else {
+            datetime = year + '/' + month + '/' + date
+          }
+
           var insuranceStatus = {
             banned: result[0],
             policyValid: result[1],
-            lastPayment: result[2].toFixed(1),
-            numAccidents: result[3].toFixed(1),
-            totalPayment: result[4].toFixed(1)
+            lastPayment: datetime,
+            numAccidents: result[3].toFixed(0),
+            totalPayment: result[4].toFixed(0) / 1000000000000000000 + ' ETH'
           }
           
           res.render('dashboard/info', {
@@ -75,13 +86,25 @@ router.post('/', function(req, res) {
         var firstAddressMsg = data.payload;
         
         insuranceInstance.insuranceTakers.call(search, function(err, result) {
+          var dt = new Date(Number(result[2])*1000);
+          var year = dt.getFullYear();
+          var month = dt.getMonth() + 1;
+          var date = dt.getDate();
+          var datetime;
+          if(year < 2019) {
+            datetime = 'null';
+          } else {
+            datetime = year + '/' + month + '/' + date
+          }
+
           var insuranceStatus = {
             banned: result[0],
             policyValid: result[1],
-            lastPayment: result[2],
-            numAccidents: result[3].toFixed(1),
-            totalPayment: result[4].toFixed(0) / 1000000000000000000
+            lastPayment: datetime,
+            numAccidents: result[3].toFixed(0),
+            totalPayment: result[4].toFixed(0) / 1000000000000000000 + ' ETH'
           }
+
           
           res.render('dashboard/info', {
             name,
