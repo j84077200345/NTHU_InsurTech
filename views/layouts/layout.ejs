@@ -10,6 +10,16 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
     crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Changa&display=swap" rel="stylesheet">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="InsurTech">
+  <link rel="apple-touch-icon" href="/images/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" href="/images/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" href="/images/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" href="/images/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" href="/images/icons/apple-icon-180x180.png">
+
+  <link rel="manifest" href="/manifest.json">
   <style>
     body {
       font-family: 'Changa', sans-serif;
@@ -27,7 +37,7 @@
   </style>
 </head>
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #00cc99;">
-    <a class="navbar-brand" href="/">
+    <a id="Title" class="navbar-brand" href="/">
       <i class="fas fa-file-signature"></i>
       NTHU InsurTech
     </a>
@@ -45,13 +55,18 @@
   <div class="container">
     <%- content %>
   </div>
-  <footer style="position: absolute; bottom: 0; width: 100%;" class="mt-5 py-3 bg-light text-secondary text-center">
-      © Copright 2019 NTHU Fintech Project
-  </footer>
+
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
-
+  
+  <script>
+    if('serviceWorker' in navigator) {   // 檢查browser有無支援serviceWorker
+      navigator.serviceWorker.register('/sw.js').then(function() {   // register會回傳一個Promise
+          console.log('Service worker registered!');
+      });
+    }
+  </script>
 </html>
